@@ -71,27 +71,6 @@ add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
 set_target_properties(${TEST_NAME} PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
 
-if (MSVC)
-    target_compile_options(
-        server PRIVATE
-        /W4
-    )
-    target_compile_options(
-        test_myvector PRIVATE
-        /W4
-    )
-else ()
-    target_compile_options(
-        server PRIVATE
-        -Wall -Wextra -pedantic -Werror
-    )
-    target_compile_options(
-        test_server PRIVATE
-        -Wall -Wextra -pedantic -Werror
-    )
-endif()
-
-
 #--------------------------------------------------------------------------------------------------
 # deb pkg
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
