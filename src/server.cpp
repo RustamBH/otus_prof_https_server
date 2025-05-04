@@ -144,6 +144,7 @@ namespace https_server {
                         }
                     });
             });
+        return boost::beast::buffers_to_string(response_.body().data());
     }
 
     http_server::http_server(net::io_context& ioc, ssl::context& ctx, const tcp::endpoint& endpoint, const std::string& doc_root, size_t thread_pool_size)
