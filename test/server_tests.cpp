@@ -15,11 +15,12 @@ TEST(RequestHandlerTest, HandleValidRequest) {
       ctx.use_certificate_chain_file("server.crt");
       ctx.use_private_key_file("server.key", ssl::context::pem);
 
+	int threads = 3;
       // IO контекст
       net::io_context ioc{ threads };
 
       // Создаем и запускаем сервер
-      https_server::http_server server{ ioc, ctx, tcp::endpoint{"127.0.0.1", "4433"}, "./www" , static_cast<std::size_t>(4) };
+      https_server::http_server server{ ioc, ctx, tcp::endpoint{"127.0.0.1", "4433"}, "./www" , static_cast<std::size_t>(threads) };
       
       server.start();
 	
