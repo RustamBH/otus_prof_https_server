@@ -118,10 +118,6 @@ namespace https_server {
         }
     }
 
-    std::string http_connection::get_response() {        
-        return write_response();
-    }
-
     std::string http_connection::write_response() {
         auto self = shared_from_this();
 
