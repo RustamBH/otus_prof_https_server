@@ -33,6 +33,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 # Настройки для GTest
 enable_testing()
 include(GoogleTest)
+set(GTEST_ROOT ${CMAKE_SOURCE_DIR}/ExternalLibs/gTest)
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIR})
 
