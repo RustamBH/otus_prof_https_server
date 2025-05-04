@@ -13,7 +13,7 @@ namespace https_server {
         : stream_(std::move(socket), ctx), doc_root_(doc_root), thread_pool_(thread_pool) {};
 
     void http_connection::start() {
-        // Асинхронное handshake SSL
+        // ГЂГ±ГЁГ­ГµГ°Г®Г­Г­Г®ГҐ handshake SSL
         stream_.async_handshake(
             ssl::stream_base::server,
             [self = shared_from_this()](const boost::system::error_code& error) {
@@ -33,7 +33,7 @@ namespace https_server {
             request_,
             [this, self](beast::error_code ec, std::size_t bytes_transferred) {
                 if (!ec) {
-                    // Передача обработки запроса в пул потоков
+                    // ГЏГҐГ°ГҐГ¤Г Г·Г  Г®ГЎГ°Г ГЎГ®ГІГЄГЁ Г§Г ГЇГ°Г®Г±Г  Гў ГЇГіГ« ГЇГ®ГІГ®ГЄГ®Гў
                     thread_pool_.enqueue([self = shared_from_this()] {
                         self->process_request();
                         });
@@ -46,47 +46,47 @@ namespace https_server {
             response_.version(request_.version());
             response_.keep_alive(false);
 
-            // Проверяем метод (поддерживаем только GET)
+            // ГЏГ°Г®ГўГҐГ°ГїГҐГ¬ Г¬ГҐГІГ®Г¤ (ГЇГ®Г¤Г¤ГҐГ°Г¦ГЁГўГ ГҐГ¬ ГІГ®Г«ГјГЄГ® GET)
             if (request_.method() != http::verb::get) {
                 response_.result(http::status::bad_request);
                 response_.set(http::field::content_type, "text/plain");
                 beast::ostream(response_.body()) << "Invalid method\n";
-                return write_response();
+                write_response();
             }
 
-            // Безопасное формирование пути к файлу
+            // ГЃГҐГ§Г®ГЇГ Г±Г­Г®ГҐ ГґГ®Г°Г¬ГЁГ°Г®ГўГ Г­ГЁГҐ ГЇГіГІГЁ ГЄ ГґГ Г©Г«Гі
             std::string request_path = std::string{ request_.target() };
             if (request_path.empty() || request_path[0] != '/' ||
                 request_path.find("..") != std::string::npos) {
                 response_.result(http::status::bad_request);
                 response_.set(http::field::content_type, "text/plain");
                 beast::ostream(response_.body()) << "Invalid request\n";
-                return write_response();
+                write_response();
             }
 
-            // Если запрос заканчивается на /, добавляем index.html
+            // Г…Г±Г«ГЁ Г§Г ГЇГ°Г®Г± Г§Г ГЄГ Г­Г·ГЁГўГ ГҐГІГ±Гї Г­Г  /, Г¤Г®ГЎГ ГўГ«ГїГҐГ¬ index.html
             if (request_path.back() == '/') {
                 request_path += "index.html";
             }
 
-            // Формируем полный путь к файлу
+            // Г”Г®Г°Г¬ГЁГ°ГіГҐГ¬ ГЇГ®Г«Г­Г»Г© ГЇГіГІГј ГЄ ГґГ Г©Г«Гі
             std::string full_path = doc_root_ + request_path;
 
-            // Пытаемся открыть файл
+            // ГЏГ»ГІГ ГҐГ¬Г±Гї Г®ГІГЄГ°Г»ГІГј ГґГ Г©Г«
             std::ifstream file(full_path, std::ios::in | std::ios::binary);
             if (!file) {
                 response_.result(http::status::not_found);
                 response_.set(http::field::content_type, "text/plain");
                 beast::ostream(response_.body()) << "File not found\n";
-                return write_response();
+                write_response();
             }
 
-            // Читаем файл и формируем ответ
+            // Г—ГЁГІГ ГҐГ¬ ГґГ Г©Г« ГЁ ГґГ®Г°Г¬ГЁГ°ГіГҐГ¬ Г®ГІГўГҐГІ
             std::ostringstream file_content;
             file_content << file.rdbuf();
             response_.result(http::status::ok);
 
-            // Определяем Content-Type по расширению файла
+            // ГЋГЇГ°ГҐГ¤ГҐГ«ГїГҐГ¬ Content-Type ГЇГ® Г°Г Г±ГёГЁГ°ГҐГ­ГЁГѕ ГґГ Г©Г«Г 
             std::string content_type = "text/plain";
             if (full_path.find(".html") != std::string::npos) {
                 content_type = "text/html";
@@ -110,7 +110,7 @@ namespace https_server {
             write_response();
         }
         catch (const std::exception& e) {
-            // Если файл не найден, отправляем 404            
+            // Г…Г±Г«ГЁ ГґГ Г©Г« Г­ГҐ Г­Г Г©Г¤ГҐГ­, Г®ГІГЇГ°Г ГўГ«ГїГҐГ¬ 404            
             response_.set(http::field::server, "Boost.Asio HTTPS Server");
             response_.set(http::field::content_type, "text/html");
             beast::ostream(response_.body()) << "404 Not Found\n";
@@ -118,7 +118,11 @@ namespace https_server {
         }
     }
 
-    void http_connection::write_response() {
+    std::string http_connection::get_response() {        
+        return write_response();
+    }
+
+    std::string http_connection::write_response() {
         auto self = shared_from_this();
 
         response_.content_length(response_.body().size());
@@ -127,10 +131,10 @@ namespace https_server {
             stream_,
             response_,
             [self](beast::error_code ec, std::size_t) {
-                // После отправки ответа закрываем соединение
+                // ГЏГ®Г±Г«ГҐ Г®ГІГЇГ°Г ГўГЄГЁ Г®ГІГўГҐГІГ  Г§Г ГЄГ°Г»ГўГ ГҐГ¬ Г±Г®ГҐГ¤ГЁГ­ГҐГ­ГЁГҐ
                 self->stream_.async_shutdown(
                     [self](beast::error_code ec) {
-                        // Игнорируем ошибку shutdown
+                        // Г€ГЈГ­Г®Г°ГЁГ°ГіГҐГ¬ Г®ГёГЁГЎГЄГі shutdown
                         if (ec == net::error::eof || ec == ssl::error::stream_truncated) {
                             ec = {};
                         }
@@ -146,14 +150,14 @@ namespace https_server {
     : acceptor_(ioc), ctx_(ctx), doc_root_(doc_root), thread_pool_(thread_pool_size) {
     beast::error_code ec;
 
-    // Открываем acceptor
+    // ГЋГІГЄГ°Г»ГўГ ГҐГ¬ acceptor
     acceptor_.open(endpoint.protocol(), ec);
     if (ec) {
         std::cerr << "open: " << ec.message() << "\n";
         return;
     }
 
-    // Устанавливаем опцию reuse address
+    // Г“Г±ГІГ Г­Г ГўГ«ГЁГўГ ГҐГ¬ Г®ГЇГ¶ГЁГѕ reuse address
     acceptor_.set_option(net::socket_base::reuse_address(true), ec);
     if (ec) {
             std::cerr << "set_option: " << ec.message() << "\n";
@@ -167,7 +171,7 @@ namespace https_server {
             return;
         }
 
-        // Начинаем слушать
+        // ГЌГ Г·ГЁГ­Г ГҐГ¬ Г±Г«ГіГёГ ГІГј
         acceptor_.listen(net::socket_base::max_listen_connections, ec);
         if (ec) {
             std::cerr << "listen: " << ec.message() << "\n";
