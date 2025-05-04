@@ -8,7 +8,7 @@ TEST(RequestHandlerTest, HandleValidRequest) {
 
 	response_.set(http::field::server, "Boost.Asio HTTPS Server");
 	response_.set(http::field::content_type, "text/html");
-	beast::ostream(response_.body()) << "Hello https\n";
+	beast::ostream(response_.body()) << "Hello https \r\n\r\n";
 	
 	std::string response = get_response();
 	
