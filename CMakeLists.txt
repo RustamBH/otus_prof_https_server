@@ -3,12 +3,12 @@ cmake_minimum_required(VERSION 3.15)
 set(PATCH_VERSION "1" CACHE INTERNAL "Patch version")
 set(PROJECT_VESRION 0.0.${PATCH_VERSION})
 
-# enable C and C++ language
-enable_language(C CXX)
-
 #--------------------------------------------------------------------------------------------------
 # variables
 set(PROJECT_NAME server)
+
+# enable C and C++ language
+enable_language(C CXX)
 
 set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(TEST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/test)
