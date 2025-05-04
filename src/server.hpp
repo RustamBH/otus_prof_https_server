@@ -76,7 +76,7 @@ namespace https_server {
         http_connection(tcp::socket socket, ssl::context& ctx, const std::string& doc_root, ThreadPool& thread_pool);
         void start();
         std::string get_response(); 
-
+        std::string write_response();
     private:
         beast::ssl_stream<tcp::socket> stream_;
         beast::flat_buffer buffer_{ 8192 };
@@ -87,7 +87,7 @@ namespace https_server {
 
         void read_request();
         void process_request();
-        std::string write_response();
+        //std::string write_response();
     };
 
     // Êëàññ ñåðâåðà
