@@ -1,7 +1,4 @@
 #include <gtest/gtest.h>
-#include "../src/server.hpp"
-
-using namespace https_server;
 
 TEST(Empty, Empty) 
 {
