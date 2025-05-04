@@ -43,7 +43,7 @@ add_executable(
     ${SRC_DIR}/server.h
 )
 
-target_link_libraries(${PROJECT_NAME} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES})
 
 
 # Test target
