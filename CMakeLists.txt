@@ -17,6 +17,7 @@ set(TEST_NAME UnitTest)
 find_package(OpenSSL REQUIRED)
 include_directories(${OPENSSL_INCLUDE_DIR})
 
+find_package(Threads REQUIRED)
 
 # Настройки для Boost
 SET(Boost_USE_STATIC_LIBS ON)
