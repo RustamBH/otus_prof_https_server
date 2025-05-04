@@ -47,7 +47,7 @@ add_executable(
     ${PROJECT_NAME}
 	${SRC_DIR}/main.cpp
     ${SRC_DIR}/server.cpp
-    ${SRC_DIR}/server.h
+    ${SRC_DIR}/server.hpp
 )
 
 target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY})
