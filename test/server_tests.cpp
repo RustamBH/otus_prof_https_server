@@ -5,8 +5,8 @@ using namespace https_server;
 
 TEST(RequestHandlerTest, HandleValidRequest) {
       // SSL контекст
-      //ssl::context ctx{ ssl::context::tlsv12 };
-      /*ctx.set_options(
+      ssl::context ctx{ ssl::context::tlsv12 };
+      ctx.set_options(
           ssl::context::default_workarounds |
           ssl::context::no_sslv2 |
           ssl::context::single_dh_use);
@@ -16,7 +16,7 @@ TEST(RequestHandlerTest, HandleValidRequest) {
       ctx.use_private_key_file("server.key", ssl::context::pem);
 
       // IO контекст
-      net::io_context ioc{ threads };*/
+      net::io_context ioc{ threads };
 
       // Создаем и запускаем сервер
       https_server::http_server server{ ioc, ctx, tcp::endpoint{"127.0.0.1", "4433"}, "./www" , static_cast<std::size_t>(4) };
