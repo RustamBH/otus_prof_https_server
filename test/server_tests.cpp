@@ -19,7 +19,7 @@ TEST(RequestHandlerTest, HandleValidRequest) {
       net::io_context ioc{ threads };*/
 
       // Создаем и запускаем сервер
-      https_server::http_server server{ ioc, ctx, tcp::endpoint{"localhost", "4433"}, "/www" , static_cast<std::size_t>(4) };
+      https_server::http_server server{ ioc, ctx, tcp::endpoint{"127.0.0.1", "4433"}, "./www" , static_cast<std::size_t>(4) };
       
       server.start();
 	
