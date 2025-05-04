@@ -18,7 +18,7 @@ namespace ssl = net::ssl;
 using tcp = net::ip::tcp;
 
 namespace https_server {
-    // Пул потоков для обработки соединений
+    // ГЏГіГ« ГЇГ®ГІГ®ГЄГ®Гў Г¤Г«Гї Г®ГЎГ°Г ГЎГ®ГІГЄГЁ Г±Г®ГҐГ¤ГЁГ­ГҐГ­ГЁГ©
     class ThreadPool {
     public:
         explicit ThreadPool(size_t threads) : stop(false) {
@@ -70,11 +70,13 @@ namespace https_server {
         bool stop;
     };
 
-    // Класс для обработки HTTP соединений
+    // ГЉГ«Г Г±Г± Г¤Г«Гї Г®ГЎГ°Г ГЎГ®ГІГЄГЁ HTTP Г±Г®ГҐГ¤ГЁГ­ГҐГ­ГЁГ©
     class http_connection : public std::enable_shared_from_this<http_connection> {
     public:
         http_connection(tcp::socket socket, ssl::context& ctx, const std::string& doc_root, ThreadPool& thread_pool);
         void start();
+        std::string get_response(); 
+
     private:
         beast::ssl_stream<tcp::socket> stream_;
         beast::flat_buffer buffer_{ 8192 };
@@ -85,10 +87,10 @@ namespace https_server {
 
         void read_request();
         void process_request();
-        void write_response();
+        std::string write_response();
     };
 
-    // Класс сервера
+    // ГЉГ«Г Г±Г± Г±ГҐГ°ГўГҐГ°Г 
     class http_server {
     public:
         http_server(net::io_context& ioc, ssl::context& ctx,
