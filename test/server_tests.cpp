@@ -4,7 +4,7 @@
 using namespace https_server;
 
 TEST(RequestHandlerTest, HandleValidRequest) {
-	http::request<http::dynamic_body> request_;
+	http::request<http::dynamic_body> response_;
 
 	response_.set(http::field::server, "Boost.Asio HTTPS Server");
 	response_.set(http::field::content_type, "text/html");
