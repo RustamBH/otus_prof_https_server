@@ -30,6 +30,12 @@ SET(Boost_USE_STATIC_LIBS ON)
 find_package(Boost REQUIRED COMPONENTS system filesystem thread)
 include_directories(${Boost_INCLUDE_DIRS})
 
+# Настройки для GTest
+enable_testing()
+include(GoogleTest)
+find_package(GTest REQUIRED)
+include_directories(${GTEST_INCLUDE_DIR})
+
 #--------------------------------------------------------------------------------------------------
 # project
 project(${PROJECT_NAME} VERSION ${PROJECT_VESRION})
@@ -44,27 +50,12 @@ add_executable(
     ${SRC_DIR}/server.h
 )
 
-target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES})
-
-# Настройки для GTest
-enable_testing()
-include(GoogleTest)
-find_package(GTest REQUIRED)
+target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES} ${GTEST_LIBRARY} )
 
 # Test target
 add_executable(
     ${TEST_NAME} 
     ${TEST_DIR}/server_tests.cpp
-)
-
-# Add src to the include directories for the test target
-target_include_directories(
-    ${TEST_NAME} PRIVATE    
-	${SRC_DIR}
-	${GTEST_INCLUDE_DIRS}
-	${GTEST_LIBRARY} 
-	${GTEST_INCLUDE_DIR}
-	${GTEST_MAIN_LIBRARY}	
 )
 
 # Link test target against gtest libraries
