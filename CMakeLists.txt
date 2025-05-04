@@ -30,11 +30,6 @@ SET(Boost_USE_STATIC_LIBS ON)
 find_package(Boost REQUIRED COMPONENTS system filesystem thread)
 include_directories(${Boost_INCLUDE_DIRS})
 
-# Настройки для GTest
-enable_testing()
-include(GoogleTest)
-find_package(GTest REQUIRED)
-
 #--------------------------------------------------------------------------------------------------
 # project
 project(${PROJECT_NAME} VERSION ${PROJECT_VESRION})
@@ -51,6 +46,10 @@ add_executable(
 
 target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT} ${OPENSSL_LIBRARIES} ${Boost_LIBRARIES})
 
+# Настройки для GTest
+enable_testing()
+include(GoogleTest)
+find_package(GTest REQUIRED)
 
 # Test target
 add_executable(
