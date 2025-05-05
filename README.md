@@ -1,4 +1,4 @@
-# otus_prof_https_server
+# Otus_prof_https_server
 
 Реализация программы асинхронного https сервера с пулом потоков.
 
@@ -10,6 +10,9 @@
 
 * Выбранная IDE: VSCode
 * Выбранный компилятор : CMake (C/С++ IntelliSense)
+
+
+# Сборка и запуск
 
 1. Установите зависимости:
 sudo apt-get install libboost-all-dev libssl-dev
