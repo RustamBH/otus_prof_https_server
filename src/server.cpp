@@ -51,7 +51,7 @@ namespace https_server {
                 response_.result(http::status::bad_request);
                 response_.set(http::field::content_type, "text/plain");
                 beast::ostream(response_.body()) << "Invalid method\n";
-                write_response();
+                return write_response();
             }
 
             // Безопасное формирование пути к файлу
@@ -61,7 +61,7 @@ namespace https_server {
                 response_.result(http::status::bad_request);
                 response_.set(http::field::content_type, "text/plain");
                 beast::ostream(response_.body()) << "Invalid request\n";
-                write_response();
+                return write_response();
             }
 
             // Если запрос заканчивается на /, добавляем index.html
@@ -78,7 +78,7 @@ namespace https_server {
                 response_.result(http::status::not_found);
                 response_.set(http::field::content_type, "text/plain");
                 beast::ostream(response_.body()) << "File not found\n";
-                write_response();
+                return write_response();
             }
 
             // Читаем файл и формируем ответ
@@ -118,7 +118,7 @@ namespace https_server {
         }
     }
 
-    std::string http_connection::write_response() {
+    void http_connection::write_response() {
         auto self = shared_from_this();
 
         response_.content_length(response_.body().size());
@@ -138,8 +138,7 @@ namespace https_server {
                             std::cerr << "Shutdown error: " << ec.message() << std::endl;
                         }
                     });
-            });
-        return boost::beast::buffers_to_string(response_.body().data());
+            });        
     }
 
     http_server::http_server(net::io_context& ioc, ssl::context& ctx, const tcp::endpoint& endpoint, const std::string& doc_root, size_t thread_pool_size)
