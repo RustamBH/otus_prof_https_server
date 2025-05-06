@@ -74,8 +74,8 @@ namespace https_server {
     class http_connection : public std::enable_shared_from_this<http_connection> {
     public:
         http_connection(tcp::socket socket, ssl::context& ctx, const std::string& doc_root, ThreadPool& thread_pool);
-        void start();        
-        std::string write_response();
+        void start();
+
     private:
         beast::ssl_stream<tcp::socket> stream_;
         beast::flat_buffer buffer_{ 8192 };
@@ -86,7 +86,7 @@ namespace https_server {
 
         void read_request();
         void process_request();
-        //std::string write_response();
+        void write_response();
     };
 
     //  класс сервера
